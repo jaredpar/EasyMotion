@@ -2,7 +2,7 @@
 // MUST match guids.h
 using System;
 
-namespace JaredPar.EasyMotion
+namespace EasyMotion
 {
     static class GuidList
     {

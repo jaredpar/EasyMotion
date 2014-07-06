@@ -2,7 +2,7 @@
 // MUST match PkgCmdID.h
 using System;
 
-namespace JaredPar.EasyMotion
+namespace EasyMotion
 {
     static class PkgCmdIDList
     {
