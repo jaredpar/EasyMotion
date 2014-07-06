@@ -138,6 +138,8 @@
     <Compile Include="Implementation\EasyMotionUtil\EasyMotionUtil.cs" />
     <Compile Include="Implementation\EasyMotionUtil\EasyMotionUtilProvider.cs" />
     <Compile Include="Implementation\Adornment\EasyMotionAdornmentFactory.cs" />
+    <Compile Include="Implementation\KeyProcessing\EasyMotionKeyProcessor.cs" />
+    <Compile Include="Implementation\KeyProcessing\EasyMotionKeyProcessorProvider.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
