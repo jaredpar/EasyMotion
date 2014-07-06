@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="964abc60-3497-47df-9eee-029d3085c9fc" Version="1.0" Language="en-US" Publisher="JaredPar" />
+    <Identity Id="5bb019ad-a18e-4c86-af3c-27217853df95" Version="1.0" Language="en-US" Publisher="JaredPar" />
     <DisplayName>EasyMotion</DisplayName>
     <Description>Easy Motion clone for Visual Studio</Description>
   </Metadata>

@@ -6,8 +6,8 @@ namespace JaredPar.EasyMotion
 {
     static class GuidList
     {
-        public const string guidEasyMotionPkgString = "964abc60-3497-47df-9eee-029d3085c9fc";
-        public const string guidEasyMotionCmdSetString = "1ddfffc7-09e1-4c00-ba6e-a2d02e217fd1";
+        public const string guidEasyMotionPkgString = "5bb019ad-a18e-4c86-af3c-27217853df95";
+        public const string guidEasyMotionCmdSetString = "907a344a-75bb-4df4-a3b3-9bc3299593b7";
 
         public static readonly Guid guidEasyMotionCmdSet = new Guid(guidEasyMotionCmdSetString);
     };
