@@ -7,16 +7,46 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EasyMotion
 {
-    interface IEasyMotionUtil
+    internal enum EasyMotionState
+    {
+        /// <summary>
+        /// Easy motion is currently not contributing to the UI 
+        /// </summary>
+        Disabled,
+
+        /// <summary>
+        /// Easy motion is waiting for the character to be typed by the developer 
+        /// </summary>
+        LookingForChar,
+
+        /// <summary>
+        /// Easy motion is waiting for the navigation decision
+        /// </summary>
+        LookingForDecision
+    }
+
+    internal interface IEasyMotionUtil
     {
         ITextView TextView {get; }
 
-        bool Enabled { get; set; }
+        EasyMotionState State { get; }
 
-        event EventHandler EnabledChanged;
+        /// <summary>
+        /// During the LookingForDecision state this will be the character which 
+        /// the user has decided to make an easy motion for 
+        /// </summary>
+        char TargetChar { get; }
+
+        event EventHandler StateChanged;
+
+        void ChangeToDisabled();
+
+        void ChangeToLookingForChar();
+
+        void ChangeToLookingForDecision(char target);
     }
 
-    interface IEasyMotionUtilProvider
+    internal interface IEasyMotionUtilProvider
     {
         IEasyMotionUtil GetEasyMotionUtil(ITextView textView);
     }

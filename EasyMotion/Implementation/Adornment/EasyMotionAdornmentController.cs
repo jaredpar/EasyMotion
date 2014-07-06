@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,19 +24,19 @@ namespace EasyMotion.Implementation.Adornment
             _wpfTextView = wpfTextview;
             _adornmentLayer = adornmentLayer;
 
-            _easyMotionUtil.EnabledChanged += OnEnabledChanged;
+            _easyMotionUtil.StateChanged += OnStateChanged;
             _wpfTextView.LayoutChanged += OnLayoutChanged;
         }
 
         private void Unsubscribe()
         {
-            _easyMotionUtil.EnabledChanged -= OnEnabledChanged;
+            _easyMotionUtil.StateChanged -= OnStateChanged;
             _wpfTextView.LayoutChanged -= OnLayoutChanged;
         }
 
-        private void OnEnabledChanged(object sender, EventArgs e)
+        private void OnStateChanged(object sender, EventArgs e)
         {
-            if (_easyMotionUtil.Enabled)
+            if (_easyMotionUtil.State == EasyMotionState.LookingForDecision)
             {
                 AddAdornments();
             }
@@ -47,7 +48,7 @@ namespace EasyMotion.Implementation.Adornment
 
         private void OnLayoutChanged(object sender, EventArgs e)
         {
-            if (_easyMotionUtil.Enabled)
+            if (_easyMotionUtil.State == EasyMotionState.LookingForDecision)
             {
                 ResetAdornments();
             }
@@ -61,6 +62,8 @@ namespace EasyMotion.Implementation.Adornment
 
         private void AddAdornments()
         {
+            Debug.Assert(_easyMotionUtil.State == EasyMotionState.LookingForDecision);
+
             if (_wpfTextView.InLayout)
             {
                 return;
@@ -75,7 +78,7 @@ namespace EasyMotion.Implementation.Adornment
                 var point = new SnapshotPoint(snapshot, i);
 
                 // HACK: for now just hard code 'a'.  Add a real configuration later
-                if (point.GetChar() == 'a')
+                if (point.GetChar() == _easyMotionUtil.TargetChar)
                 {
                     var textBlock = new TextBlock();
                     textBlock.Text = point.GetChar().ToString();

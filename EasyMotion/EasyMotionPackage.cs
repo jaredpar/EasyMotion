@@ -8,6 +8,11 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using System.ComponentModel.Composition.Hosting;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
+using Microsoft.VisualStudio.Editor;
 
 namespace EasyMotion
 {
@@ -32,32 +37,20 @@ namespace EasyMotion
     [Guid(GuidList.guidEasyMotionPkgString)]
     public sealed class EasyMotionPackage : Package
     {
-        /// <summary>
-        /// Default constructor of the package.
-        /// Inside this method you can place any initialization code that does not require 
-        /// any Visual Studio service because at this point the package object is created but 
-        /// not sited yet inside Visual Studio environment. The place to do all the other 
-        /// initialization is the Initialize method.
-        /// </summary>
+        private IComponentModel _componentModel;
+        private ExportProvider _exportProvider;
+
         public EasyMotionPackage()
         {
-            Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+
         }
 
-
-
-        /////////////////////////////////////////////////////////////////////////////
-        // Overridden Package Implementation
-        #region Package Members
-
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
         protected override void Initialize()
         {
-            Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
+
+            _componentModel = (IComponentModel)GetService(typeof(SComponentModel));
+            _exportProvider = _componentModel.DefaultExportProvider;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -69,32 +62,52 @@ namespace EasyMotion
                 mcs.AddCommand( menuItem );
             }
         }
-        #endregion
 
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
         private void MenuItemCallback(object sender, EventArgs e)
         {
-            // Show a Message Box to prove we were here
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            Guid clsid = Guid.Empty;
-            int result;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(uiShell.ShowMessageBox(
-                       0,
-                       ref clsid,
-                       "EasyMotion",
-                       string.Format(CultureInfo.CurrentCulture, "Inside {0}.MenuItemCallback()", this.ToString()),
-                       string.Empty,
-                       0,
-                       OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                       OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
-                       OLEMSGICON.OLEMSGICON_INFO,
-                       0,        // false
-                       out result));
+            ITextView textView;
+            if (!TryGetActiveTextView(out textView))
+            {
+                return;
+            }
+
+            var easyMotionUtilProvider = _exportProvider.GetExportedValue<IEasyMotionUtilProvider>();
+            var easyMotionUtil = easyMotionUtilProvider.GetEasyMotionUtil(textView);
+
+            // HACK: just doing this to drive the example right now, need a real implementation
+            if (easyMotionUtil.State == EasyMotionState.LookingForDecision)
+            {
+                easyMotionUtil.ChangeToDisabled();
+            }
+            else
+            {
+                easyMotionUtil.ChangeToLookingForDecision('a');
+            }
         }
 
+        private bool TryGetActiveTextView(out ITextView textView)
+        {
+            var vsTextManager = (IVsTextManager)GetService(typeof(SVsTextManager));
+
+            IVsTextView vsTextView;
+            if (ErrorHandler.Failed(vsTextManager.GetActiveView(0, null, out vsTextView)))
+            {
+                textView = null;
+                return false;
+            }
+
+            try
+            {
+                var vsEditorAdaptersFactoryService = _exportProvider.GetExportedValue<IVsEditorAdaptersFactoryService>();
+                textView = vsEditorAdaptersFactoryService.GetWpfTextView(vsTextView);
+                return textView != null;
+            }
+            catch
+            {
+                // GetWpfTextView can throw an exception
+                textView = null;
+                return false;
+            }
+        }
     }
 }

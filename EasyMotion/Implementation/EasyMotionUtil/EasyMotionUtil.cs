@@ -10,19 +10,17 @@ namespace EasyMotion.Implementation.EasyMotionUtil
     internal sealed class EasyMotionUtil : IEasyMotionUtil
     {
         private readonly ITextView _textView;
-        private bool _enabled;
+        private EasyMotionState _state;
+        private char _targetChar;
 
-        public bool Enabled
+        public EasyMotionState State
         {
-            get { return _enabled; } 
-            set
-            {
-                if (_enabled != value)
-                {
-                    _enabled = value;
-                    RaiseEnabledChanged();
-                }
-            }
+            get { return _state; }
+        }
+
+        public char TargetChar
+        {
+            get { return _targetChar; }
         }
 
         public ITextView TextView
@@ -30,19 +28,38 @@ namespace EasyMotion.Implementation.EasyMotionUtil
             get { return _textView; }
         }
 
-        public event EventHandler EnabledChanged;
+        public event EventHandler StateChanged;
 
         internal EasyMotionUtil(ITextView textView)
         {
             _textView = textView;
-
-            // HACK: should be disabled by default.  Enabled by default only for testing
-            _enabled = true;
+            ChangeToDisabled();
         }
 
-        private void RaiseEnabledChanged()
+        public void ChangeToDisabled()
         {
-            var list = EnabledChanged;
+            _state = EasyMotionState.Disabled;
+            _targetChar = (char)0;
+            RaiseStateChanged();
+        }
+
+        public void ChangeToLookingForChar()
+        {
+            _state = EasyMotionState.LookingForChar;
+            _targetChar = (char)0;
+            RaiseStateChanged();
+        }
+
+        public void ChangeToLookingForDecision(char target)
+        {
+            _state = EasyMotionState.LookingForDecision;
+            _targetChar = target;
+            RaiseStateChanged();
+        }
+
+        private void RaiseStateChanged()
+        {
+            var list = StateChanged;
             if (list != null)
             {
                 list(this, EventArgs.Empty);
