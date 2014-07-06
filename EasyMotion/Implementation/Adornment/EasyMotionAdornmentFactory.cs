@@ -12,10 +12,11 @@ using Microsoft.VisualStudio.Utilities;
 namespace EasyMotion.Implementation.Adornment
 {
     [Export(typeof(IWpfTextViewCreationListener))]
+    [Export(typeof(IEasyMotionNavigatorProvider))]
     [ContentType("any")]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     [TagType(typeof(IntraTextAdornmentTag))]
-    internal sealed class EasyMotionAdornmentFactory : IWpfTextViewCreationListener
+    internal sealed class EasyMotionAdornmentFactory : IWpfTextViewCreationListener, IEasyMotionNavigatorProvider
     {
         private static readonly object Key = new object();
         private const string AdornmentLayerName = "Easy Motion Adornment Layer";
@@ -35,11 +36,27 @@ namespace EasyMotion.Implementation.Adornment
             _easyMotionUtilProvider = easyMotionUtilProvider;
         }
 
-        public void TextViewCreated(IWpfTextView textView)
+        private EasyMotionAdornmentController GetOrCreate(IWpfTextView wpfTextView)
         {
-            var adornmentLayer = textView.GetAdornmentLayer(AdornmentLayerName);
-            var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(textView);
-            new EasyMotionAdornmentController(easyMotionUtil, textView, adornmentLayer);
+            return wpfTextView.Properties.GetOrCreateSingletonProperty(
+                Key,
+                () =>
+                {
+                    var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
+                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView);
+                });
+        }
+
+        public void TextViewCreated(IWpfTextView wpfTextView)
+        {
+            var easyMotionAdornmentController = GetOrCreate(wpfTextView);
+            var adornmentLayer = wpfTextView.GetAdornmentLayer(AdornmentLayerName);
+            easyMotionAdornmentController.SetAdornmentLayer(adornmentLayer);
+        }
+
+        public IEasyMotionNavigator GetEasyMotionNavigator(IWpfTextView wpfTextView)
+        {
+            return GetOrCreate(wpfTextView);
         }
     }
 }

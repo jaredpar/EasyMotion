@@ -11,19 +11,31 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EasyMotion.Implementation.Adornment
 {
-    internal sealed class EasyMotionAdornmentController
+    internal sealed class EasyMotionAdornmentController : IEasyMotionNavigator
     {
+        private const string CharLettersUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
-        private readonly IAdornmentLayer _adornmentLayer;
+        private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
+        private IAdornmentLayer _adornmentLayer;
 
-        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IAdornmentLayer adornmentLayer)
+        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
-            _adornmentLayer = adornmentLayer;
+        }
 
+        internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
+        {
+            Debug.Assert(_adornmentLayer == null);
+            _adornmentLayer = adornmentLayer;
+            Subscribe();
+        }
+
+        private void Subscribe()
+        {
             _easyMotionUtil.StateChanged += OnStateChanged;
             _wpfTextView.LayoutChanged += OnLayoutChanged;
         }
@@ -69,29 +81,56 @@ namespace EasyMotion.Implementation.Adornment
                 return;
             }
 
+            _navigateMap.Clear();
             var textViewLines = _wpfTextView.TextViewLines;
             var startPoint = textViewLines.FirstVisibleLine.Start;
             var endPoint = textViewLines.LastVisibleLine.End;
             var snapshot = startPoint.Snapshot;
+            int navigateIndex = 0;
             for (int i = startPoint.Position; i < endPoint.Position; i++)
             {
                 var point = new SnapshotPoint(snapshot, i);
 
-                // HACK: for now just hard code 'a'.  Add a real configuration later
-                if (point.GetChar() == _easyMotionUtil.TargetChar)
+                if (point.GetChar() == _easyMotionUtil.TargetChar && navigateIndex < CharLettersUpper.Length)
                 {
-                    var textBlock = new TextBlock();
-                    textBlock.Text = point.GetChar().ToString();
-                    textBlock.Background = Brushes.LightYellow;
-
-                    var span = new SnapshotSpan(point, 1);
-                    var bounds = textViewLines.GetMarkerGeometry(span).Bounds;
-                    Canvas.SetTop(textBlock, bounds.Top);
-                    Canvas.SetLeft(textBlock, bounds.Left);
-
-                    _adornmentLayer.AddAdornment(span, _tag, textBlock);
+                    string key = CharLettersUpper[navigateIndex].ToString();
+                    navigateIndex++;
+                    AddNavigateToPoint(textViewLines, point, key);
                 }
             }
+        }
+
+        private void AddNavigateToPoint(IWpfTextViewLineCollection textViewLines, SnapshotPoint point, string key)
+        {
+            _navigateMap[key] = point;
+
+            var textBlock = new TextBlock();
+            textBlock.Text = key;
+            textBlock.Background = Brushes.LightYellow;
+
+            var span = new SnapshotSpan(point, 1);
+            var bounds = textViewLines.GetMarkerGeometry(span).Bounds;
+            Canvas.SetTop(textBlock, bounds.Top);
+            Canvas.SetLeft(textBlock, bounds.Left);
+
+            _adornmentLayer.AddAdornment(span, _tag, textBlock);
+        }
+
+        public bool NavigateTo(string key)
+        {
+            SnapshotPoint point;
+            if (!_navigateMap.TryGetValue(key, out point))
+            {
+                return false;
+            }
+
+            if (point.Snapshot != _wpfTextView.TextSnapshot)
+            {
+                return false;
+            }
+
+            _wpfTextView.Caret.MoveTo(point);
+            return true;
         }
     }
 }

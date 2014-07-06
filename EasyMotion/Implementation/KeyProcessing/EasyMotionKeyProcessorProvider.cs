@@ -17,17 +17,20 @@ namespace EasyMotion.Implementation.KeyProcessing
     internal sealed class EasyMotionKeyProcessorProvider : IKeyProcessorProvider
     {
         private readonly IEasyMotionUtilProvider _easyMotionUtilProvider;
+        private readonly IEasyMotionNavigatorProvider _easyMotionNavigatorProvider;
 
         [ImportingConstructor]
-        internal EasyMotionKeyProcessorProvider(IEasyMotionUtilProvider easyMotionUtilProvider)
+        internal EasyMotionKeyProcessorProvider(IEasyMotionUtilProvider easyMotionUtilProvider, IEasyMotionNavigatorProvider easyMotionNavigatorProvider)
         {
             _easyMotionUtilProvider = easyMotionUtilProvider;
+            _easyMotionNavigatorProvider = easyMotionNavigatorProvider;
         }
 
         public KeyProcessor GetAssociatedProcessor(IWpfTextView wpfTextView)
         {
             var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
-            return new EasyMotionKeyProcessor(easyMotionUtil);
+            var easyMotionNavigator = _easyMotionNavigatorProvider.GetEasyMotionNavigator(wpfTextView);
+            return new EasyMotionKeyProcessor(easyMotionUtil, easyMotionNavigator);
         }
     }
 }

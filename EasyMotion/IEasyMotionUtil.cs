@@ -50,4 +50,5 @@ namespace EasyMotion
     {
         IEasyMotionUtil GetEasyMotionUtil(ITextView textView);
     }
+
 }
