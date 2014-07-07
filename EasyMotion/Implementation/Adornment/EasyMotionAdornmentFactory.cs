@@ -28,7 +28,7 @@ namespace EasyMotion.Implementation.Adornment
 #pragma warning disable 169
         [Export(typeof(AdornmentLayerDefinition))]
         [Name(AdornmentLayerName)]
-        [Order(After = PredefinedAdornmentLayers.Selection)]
+        [Order(After = PredefinedAdornmentLayers.Text)]
         private AdornmentLayerDefinition _easyMotionAdornmentLayerDefinition;
 #pragma warning restore 169
 

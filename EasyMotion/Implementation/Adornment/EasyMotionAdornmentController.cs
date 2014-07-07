@@ -19,7 +19,7 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
         private readonly IClassificationFormatMap _classificationFormatMap;
-        private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
+        private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>(StringComparer.OrdinalIgnoreCase);
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
@@ -94,7 +94,7 @@ namespace EasyMotion.Implementation.Adornment
             {
                 var point = new SnapshotPoint(snapshot, i);
 
-                if (point.GetChar() == _easyMotionUtil.TargetChar && navigateIndex < CharLettersUpper.Length)
+                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < CharLettersUpper.Length)
                 {
                     string key = CharLettersUpper[navigateIndex].ToString();
                     navigateIndex++;
