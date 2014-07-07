@@ -17,6 +17,8 @@
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>EasyMotionNavigate</ButtonText>
+          <CanonicalName>.EasyMotion.Navigate</CanonicalName>
+          <LocCanonicalName>.EasyMotion.Navigate</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
