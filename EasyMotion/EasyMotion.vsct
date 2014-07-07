@@ -87,6 +87,10 @@
   </Commands>
 
 
+  <KeyBindings>
+    <KeyBinding guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" key1="VK_OEM_1" mod1="Control Shift" editor="guidVSStd97" />
+    <KeyBinding guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" key1="l" mod1="Control Shift" editor="guidVSStd97" />
+  </KeyBindings>
 
 
 
