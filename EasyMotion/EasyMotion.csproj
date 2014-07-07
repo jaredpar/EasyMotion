@@ -72,6 +72,7 @@
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -141,6 +142,11 @@
     <Compile Include="Implementation\Adornment\EasyMotionAdornmentFactory.cs" />
     <Compile Include="Implementation\KeyProcessing\EasyMotionKeyProcessor.cs" />
     <Compile Include="Implementation\KeyProcessing\EasyMotionKeyProcessorProvider.cs" />
+    <Compile Include="Implementation\Margin\EasyMotionMargin.xaml.cs">
+      <DependentUpon>EasyMotionMargin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Implementation\Margin\EasyMotionMarginController.cs" />
+    <Compile Include="Implementation\Margin\EasyMotionMarginProvider.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -180,7 +186,12 @@
   <ItemGroup>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Implementation\Margin\EasyMotionMargin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
