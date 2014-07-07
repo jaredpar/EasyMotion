@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 
 namespace EasyMotion.Implementation.Adornment
@@ -17,14 +18,16 @@ namespace EasyMotion.Implementation.Adornment
 
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
+        private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
-        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview)
+        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IClassificationFormatMap classificationFormatMap)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
+            _classificationFormatMap = classificationFormatMap;
         }
 
         internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
@@ -106,6 +109,7 @@ namespace EasyMotion.Implementation.Adornment
 
             var textBlock = new TextBlock();
             textBlock.Text = key;
+            textBlock.FontFamily = _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
             textBlock.Background = Brushes.LightYellow;
 
             var span = new SnapshotSpan(point, 1);

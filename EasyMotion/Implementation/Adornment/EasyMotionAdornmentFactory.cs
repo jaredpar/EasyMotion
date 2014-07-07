@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -22,6 +23,7 @@ namespace EasyMotion.Implementation.Adornment
         private const string AdornmentLayerName = "Easy Motion Adornment Layer";
 
         private readonly IEasyMotionUtilProvider _easyMotionUtilProvider;
+        private readonly IClassificationFormatMapService _classificationFormatMapService;
 
 #pragma warning disable 169
         [Export(typeof(AdornmentLayerDefinition))]
@@ -31,9 +33,10 @@ namespace EasyMotion.Implementation.Adornment
 #pragma warning restore 169
 
         [ImportingConstructor]
-        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider)
+        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IClassificationFormatMapService classificationFormatMapService)
         {
             _easyMotionUtilProvider = easyMotionUtilProvider;
+            _classificationFormatMapService = classificationFormatMapService;
         }
 
         private EasyMotionAdornmentController GetOrCreate(IWpfTextView wpfTextView)
@@ -43,7 +46,8 @@ namespace EasyMotion.Implementation.Adornment
                 () =>
                 {
                     var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
-                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView);
+                    var classificationFormatMap = _classificationFormatMapService.GetClassificationFormatMap(wpfTextView);
+                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, classificationFormatMap);
                 });
         }
 
