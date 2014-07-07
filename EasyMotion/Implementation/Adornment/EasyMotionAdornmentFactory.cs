@@ -23,6 +23,7 @@ namespace EasyMotion.Implementation.Adornment
         private const string AdornmentLayerName = "Easy Motion Adornment Layer";
 
         private readonly IEasyMotionUtilProvider _easyMotionUtilProvider;
+        private readonly IEditorFormatMapService _editorFormatMapService;
         private readonly IClassificationFormatMapService _classificationFormatMapService;
 
 #pragma warning disable 169
@@ -33,9 +34,10 @@ namespace EasyMotion.Implementation.Adornment
 #pragma warning restore 169
 
         [ImportingConstructor]
-        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IClassificationFormatMapService classificationFormatMapService)
+        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IEditorFormatMapService editorFormatMapService, IClassificationFormatMapService classificationFormatMapService)
         {
             _easyMotionUtilProvider = easyMotionUtilProvider;
+            _editorFormatMapService = editorFormatMapService;
             _classificationFormatMapService = classificationFormatMapService;
         }
 
@@ -46,8 +48,9 @@ namespace EasyMotion.Implementation.Adornment
                 () =>
                 {
                     var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
+                    var editorFormatMap = _editorFormatMapService.GetEditorFormatMap(wpfTextView);
                     var classificationFormatMap = _classificationFormatMapService.GetClassificationFormatMap(wpfTextView);
-                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, classificationFormatMap);
+                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, editorFormatMap, classificationFormatMap);
                 });
         }
 

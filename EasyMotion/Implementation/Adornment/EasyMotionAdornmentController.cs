@@ -18,15 +18,17 @@ namespace EasyMotion.Implementation.Adornment
 
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
+        private readonly IEditorFormatMap _editorFormatMap;
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>(StringComparer.OrdinalIgnoreCase);
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
-        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IClassificationFormatMap classificationFormatMap)
+        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
+            _editorFormatMap = editorFormatMap;
             _classificationFormatMap = classificationFormatMap;
         }
 
@@ -107,10 +109,13 @@ namespace EasyMotion.Implementation.Adornment
         {
             _navigateMap[key] = point;
 
+            var resourceDictionary = _editorFormatMap.GetProperties(EasyMotionNavigateFormatDefinition.Name);
+
             var textBlock = new TextBlock();
             textBlock.Text = key;
             textBlock.FontFamily = _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
-            textBlock.Background = Brushes.LightYellow;
+            textBlock.Foreground = resourceDictionary.GetForegroundBrush(EasyMotionNavigateFormatDefinition.DefaultForegroundBrush);
+            textBlock.Background = resourceDictionary.GetBackgroundBrush(EasyMotionNavigateFormatDefinition.DefaultBackgroundBrush);
 
             var span = new SnapshotSpan(point, 1);
             var bounds = textViewLines.GetMarkerGeometry(span).Bounds;

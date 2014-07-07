@@ -136,10 +136,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="IEasyMotionNavigator.cs" />
     <Compile Include="IEasyMotionUtil.cs" />
     <Compile Include="Implementation\Adornment\EasyMotionAdornmentController.cs" />
+    <Compile Include="Implementation\Adornment\EasyMotionNavigateFormatDefinition.cs" />
     <Compile Include="Implementation\EasyMotionUtil\EasyMotionUtil.cs" />
     <Compile Include="Implementation\EasyMotionUtil\EasyMotionUtilProvider.cs" />
     <Compile Include="Implementation\Adornment\EasyMotionAdornmentFactory.cs" />
