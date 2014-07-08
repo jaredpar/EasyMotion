@@ -14,13 +14,16 @@ namespace EasyMotion.Implementation.Adornment
 {
     internal sealed class EasyMotionAdornmentController : IEasyMotionNavigator
     {
-        private const string CharLettersUpper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private static readonly string[] NavigationKeys =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            .Select(x => x.ToString())
+            .ToArray();
 
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
         private readonly IEditorFormatMap _editorFormatMap;
         private readonly IClassificationFormatMap _classificationFormatMap;
-        private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
@@ -96,9 +99,9 @@ namespace EasyMotion.Implementation.Adornment
             {
                 var point = new SnapshotPoint(snapshot, i);
 
-                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < CharLettersUpper.Length)
+                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < NavigationKeys.Length)
                 {
-                    string key = CharLettersUpper[navigateIndex].ToString();
+                    string key = NavigationKeys[navigateIndex];
                     navigateIndex++;
                     AddNavigateToPoint(textViewLines, point, key);
                 }
@@ -121,6 +124,7 @@ namespace EasyMotion.Implementation.Adornment
             var bounds = textViewLines.GetMarkerGeometry(span).Bounds;
             Canvas.SetTop(textBlock, bounds.Top);
             Canvas.SetLeft(textBlock, bounds.Left);
+            Canvas.SetZIndex(textBlock, 10);
 
             _adornmentLayer.AddAdornment(span, _tag, textBlock);
         }
