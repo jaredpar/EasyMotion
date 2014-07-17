@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
+using System.Windows;
 
 namespace EasyMotion.Implementation.Adornment
 {
@@ -114,19 +115,21 @@ namespace EasyMotion.Implementation.Adornment
 
             var resourceDictionary = _editorFormatMap.GetProperties(EasyMotionNavigateFormatDefinition.Name);
 
-            var textBlock = new TextBlock();
-            textBlock.Text = key;
-            textBlock.FontFamily = _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
-            textBlock.Foreground = resourceDictionary.GetForegroundBrush(EasyMotionNavigateFormatDefinition.DefaultForegroundBrush);
-            textBlock.Background = resourceDictionary.GetBackgroundBrush(EasyMotionNavigateFormatDefinition.DefaultBackgroundBrush);
-
             var span = new SnapshotSpan(point, 1);
-            var bounds = textViewLines.GetMarkerGeometry(span).Bounds;
-            Canvas.SetTop(textBlock, bounds.Top);
-            Canvas.SetLeft(textBlock, bounds.Left);
-            Canvas.SetZIndex(textBlock, 10);
+            var bounds = textViewLines.GetCharacterBounds(point);
 
-            _adornmentLayer.AddAdornment(span, _tag, textBlock);
+            var textBox = new TextBox();
+            textBox.Text = key;
+            textBox.FontFamily = _classificationFormatMap.DefaultTextProperties.Typeface.FontFamily;
+            textBox.Foreground = resourceDictionary.GetForegroundBrush(EasyMotionNavigateFormatDefinition.DefaultForegroundBrush);
+            textBox.Background = resourceDictionary.GetBackgroundBrush(EasyMotionNavigateFormatDefinition.DefaultBackgroundBrush);
+            textBox.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+
+            Canvas.SetTop(textBox, bounds.TextTop);
+            Canvas.SetLeft(textBox, bounds.Left);
+            Canvas.SetZIndex(textBox, 10);
+
+            _adornmentLayer.AddAdornment(span, _tag, textBox);
         }
 
         public bool NavigateTo(string key)
