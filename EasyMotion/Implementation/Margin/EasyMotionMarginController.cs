@@ -19,6 +19,7 @@ namespace EasyMotion.Implementation.Margin
             _easyMotionUtil = easyMotionUtil;
             _easyMotionUtil.StateChanged += OnStateChanged;
             _control = new EasyMotionMargin();
+            UpdateControl();
         }
 
         private void Unsubscribe()
@@ -26,7 +27,7 @@ namespace EasyMotion.Implementation.Margin
             _easyMotionUtil.StateChanged -= OnStateChanged;
         }
 
-        private void OnStateChanged(object sender, EventArgs e)
+        private void UpdateControl()
         {
             switch (_easyMotionUtil.State)
             {
@@ -47,7 +48,12 @@ namespace EasyMotion.Implementation.Margin
             }
         }
 
-        public bool Enabled  
+        private void OnStateChanged(object sender, EventArgs e)
+        {
+            UpdateControl();
+        }
+
+        public bool Enabled
         {
             get { return _easyMotionUtil.State != EasyMotionState.Disabled; }
         }
