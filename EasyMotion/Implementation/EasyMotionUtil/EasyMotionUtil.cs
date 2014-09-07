@@ -57,6 +57,12 @@ namespace EasyMotion.Implementation.EasyMotionUtil
             RaiseStateChanged();
         }
 
+        public void ChangeToLookingCharNotFound()
+        {
+            _state = EasyMotionState.LookingCharNotFound;
+            RaiseStateChanged();
+        }
+
         private void RaiseStateChanged()
         {
             var list = StateChanged;

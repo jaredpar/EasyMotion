@@ -22,7 +22,13 @@ namespace EasyMotion
         /// <summary>
         /// Easy motion is waiting for the navigation decision
         /// </summary>
-        LookingForDecision
+        LookingForDecision,
+
+        /// <summary>
+        /// Typed character not found in current text layout. 
+        /// Easy motion is waiting for the character to be typed by the developer
+        /// </summary>
+        LookingCharNotFound
     }
 
     internal interface IEasyMotionUtil
@@ -44,6 +50,8 @@ namespace EasyMotion
         void ChangeToLookingForChar();
 
         void ChangeToLookingForDecision(char target);
+
+        void ChangeToLookingCharNotFound();
     }
 
     internal interface IEasyMotionUtilProvider

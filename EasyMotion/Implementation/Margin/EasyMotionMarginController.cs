@@ -42,6 +42,10 @@ namespace EasyMotion.Implementation.Margin
                     _control.Visibility = Visibility.Visible;
                     _control.StatusLine = "Type the character at the location you want to jump to";
                     break;
+                case EasyMotionState.LookingCharNotFound:
+                    _control.Visibility = Visibility.Visible;
+                    _control.StatusLine = string.Format("Character '{0}' not found. Type the character you want to search for", _easyMotionUtil.TargetChar);
+                    break;
                 default:
                     Debug.Assert(false);
                     break;
