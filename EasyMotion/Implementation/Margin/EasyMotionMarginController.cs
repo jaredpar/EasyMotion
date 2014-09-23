@@ -19,6 +19,7 @@ namespace EasyMotion.Implementation.Margin
             _easyMotionUtil = easyMotionUtil;
             _easyMotionUtil.StateChanged += OnStateChanged;
             _control = new EasyMotionMargin();
+            UpdateControl();
         }
 
         private void Unsubscribe()
@@ -26,7 +27,7 @@ namespace EasyMotion.Implementation.Margin
             _easyMotionUtil.StateChanged -= OnStateChanged;
         }
 
-        private void OnStateChanged(object sender, EventArgs e)
+        private void UpdateControl()
         {
             switch (_easyMotionUtil.State)
             {
@@ -41,13 +42,22 @@ namespace EasyMotion.Implementation.Margin
                     _control.Visibility = Visibility.Visible;
                     _control.StatusLine = "Type the character at the location you want to jump to";
                     break;
+                case EasyMotionState.LookingCharNotFound:
+                    _control.Visibility = Visibility.Visible;
+                    _control.StatusLine = string.Format("Character '{0}' not found. Type the character you want to search for", _easyMotionUtil.TargetChar);
+                    break;
                 default:
                     Debug.Assert(false);
                     break;
             }
         }
 
-        public bool Enabled  
+        private void OnStateChanged(object sender, EventArgs e)
+        {
+            UpdateControl();
+        }
+
+        public bool Enabled
         {
             get { return _easyMotionUtil.State != EasyMotionState.Disabled; }
         }

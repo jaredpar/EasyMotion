@@ -69,9 +69,15 @@ namespace EasyMotion.Implementation.Adornment
 
         private void OnLayoutChanged(object sender, EventArgs e)
         {
-            if (_easyMotionUtil.State == EasyMotionState.LookingForDecision)
+            switch (_easyMotionUtil.State)
             {
-                ResetAdornments();
+                case EasyMotionState.LookingCharNotFound:
+                    _easyMotionUtil.ChangeToLookingForDecision(_easyMotionUtil.TargetChar);
+                    break;
+
+                case EasyMotionState.LookingForDecision:
+                    ResetAdornments();
+                    break;
             }
         }
 
@@ -106,6 +112,11 @@ namespace EasyMotion.Implementation.Adornment
                     navigateIndex++;
                     AddNavigateToPoint(textViewLines, point, key);
                 }
+            }
+
+            if (navigateIndex == 0)
+            {
+                _easyMotionUtil.ChangeToLookingCharNotFound();
             }
         }
 

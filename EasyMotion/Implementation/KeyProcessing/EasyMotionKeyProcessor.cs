@@ -31,6 +31,7 @@ namespace EasyMotion.Implementation.KeyProcessing
                     // Nothing to do here 
                     break;
                 case EasyMotionState.LookingForChar:
+                case EasyMotionState.LookingCharNotFound:
                     TextInputLookingForChar(args);
                     break;
                 case EasyMotionState.LookingForDecision:
