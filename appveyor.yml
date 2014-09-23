@@ -1,0 +1,10 @@
+
+configuration: Debug
+
+build:
+  project: EasyMotion.sln
+  verbosity: minimal
+
+artifacts:
+  - path: Src\EasyMotion\bin\Debug\EasyMotion.vsix
+
