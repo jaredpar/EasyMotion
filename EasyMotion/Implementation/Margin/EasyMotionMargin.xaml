@@ -10,6 +10,7 @@
 
     <StackPanel>
         <TextBox 
+            x:Name="statusLine"
             IsReadOnly="True"
             Text="{Binding Path=StatusLine}" />
 

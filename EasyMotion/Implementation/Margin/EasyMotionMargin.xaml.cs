@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.VisualStudio.PlatformUI;
 
 namespace EasyMotion.Implementation.Margin
 {
@@ -31,6 +32,10 @@ namespace EasyMotion.Implementation.Margin
         public EasyMotionMargin()
         {
             InitializeComponent();
+
+            statusLine.SetResourceReference(Control.ForegroundProperty, EnvironmentColors.DropDownTextBrushKey);
+            statusLine.SetResourceReference(Control.BackgroundProperty, EnvironmentColors.DropDownBackgroundBrushKey);
+            statusLine.SetResourceReference(Control.BorderBrushProperty, EnvironmentColors.DropDownBorderBrushKey);
         }
     }
 }
