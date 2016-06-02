@@ -14,6 +14,7 @@ namespace EasyMotion.Implementation.KeyProcessing
     {
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IEasyMotionNavigator _easyMotionNavigator;
+        private string _userInput = string.Empty;
 
         internal EasyMotionKeyProcessor(IEasyMotionUtil easyMotionUtil, IEasyMotionNavigator easyMotionNavigator)
         {
@@ -66,13 +67,24 @@ namespace EasyMotion.Implementation.KeyProcessing
         {
             if (args.Text.Length > 0)
             {
-                if (_easyMotionNavigator.NavigateTo(args.Text))
+                _userInput = _userInput + args.Text;
+
+                if (_userInput.Length == 2)
                 {
-                    _easyMotionUtil.ChangeToDisabled();
+                    if (_easyMotionNavigator.NavigateTo(_userInput))
+                    {
+                        _easyMotionUtil.ChangeToDisabled();
+                    }
+                    else
+                    {
+                        SystemSounds.Beep.Play();
+                    }
+
+                    _userInput = string.Empty;
                 }
-                else
+                else if(_userInput.Length > 2)
                 {
-                    SystemSounds.Beep.Play();
+                    _userInput = string.Empty;
                 }
 
                 args.Handled = true;
