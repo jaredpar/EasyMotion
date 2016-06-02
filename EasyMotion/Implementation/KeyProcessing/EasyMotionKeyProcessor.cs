@@ -50,6 +50,7 @@ namespace EasyMotion.Implementation.KeyProcessing
 
             if (args.Key == Key.Escape && _easyMotionUtil.State != EasyMotionState.Disabled)
             {
+                _userInput = string.Empty;
                 _easyMotionUtil.ChangeToDisabled();
             }
         }
