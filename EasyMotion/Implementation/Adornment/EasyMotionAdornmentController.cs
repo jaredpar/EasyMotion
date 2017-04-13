@@ -15,10 +15,7 @@ namespace EasyMotion.Implementation.Adornment
 {
     internal sealed class EasyMotionAdornmentController : IEasyMotionNavigator
     {
-        private static readonly string[] NavigationKeys =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .Select(x => x.ToString())
-            .ToArray();
+        private static readonly string[] NavigationKeys = new string[676];
 
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IWpfTextView _wpfTextView;
@@ -34,6 +31,16 @@ namespace EasyMotion.Implementation.Adornment
             _wpfTextView = wpfTextview;
             _editorFormatMap = editorFormatMap;
             _classificationFormatMap = classificationFormatMap;
+
+            var count = 0;
+            foreach (var letter1 in "abcdefghijklmnopqrstuvwxyz")
+            {
+                foreach(var letter2 in "abcdefghijklmnopqrstuvwxyz")
+                {
+                    NavigationKeys[count] = letter1.ToString() + letter2.ToString();
+                    count++;
+                }
+            }
         }
 
         internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
