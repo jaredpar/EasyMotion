@@ -1,0 +1,1 @@
+﻿30-Mar-2017 v1.0.2 - Upgraded to support VS2017
