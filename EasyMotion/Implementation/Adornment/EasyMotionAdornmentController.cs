@@ -57,10 +57,10 @@ namespace EasyMotion.Implementation.Adornment {
         {
             if (_easyMotionUtil.State == EasyMotionState.LookingForDecision)
             {
+                AddAdornments ();
             }
             else
             {
-                AddAdornments ();
                 _adornmentLayer.RemoveAdornmentsByTag (_tag);
             }
         }
