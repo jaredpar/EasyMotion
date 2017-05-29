@@ -1,1 +1,4 @@
-﻿30-Mar-2017 v1.0.2 - Upgraded to support VS2017
+﻿2017-??-?? v1.1.0 - Hack to work with VsVim (Send ESC keystroke after navigation); Add command to navigate by two letters
+
+30-Mar-2017 v1.0.2 - Upgraded to support VS2017
+

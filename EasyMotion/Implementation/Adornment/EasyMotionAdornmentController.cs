@@ -157,6 +157,7 @@ namespace EasyMotion.Implementation.Adornment
             }
 
             _wpfTextView.Caret.MoveTo(point);
+            System.Windows.Forms.SendKeys.Send ("{ESC}"); 
             return true;
         }
     }
