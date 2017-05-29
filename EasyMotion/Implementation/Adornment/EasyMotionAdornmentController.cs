@@ -105,9 +105,10 @@ namespace EasyMotion.Implementation.Adornment
             for (int i = startPoint.Position; i < endPoint.Position; i++)
             {
                 var point = new SnapshotPoint(snapshot, i);
+            var ignoreCase = _easyMotionUtil.Target.ToLowerInvariant () == _easyMotionUtil.Target; //smartcase
+            var target = ignoreCase ? _easyMotionUtil.Target.ToLowerInvariant () : _easyMotionUtil.Target;
 
-                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < NavigationKeys.Length)
-                {
+                if ((ignoreCase ? span.GetText ().ToLowerInvariant () : span.GetText ()) == target && navigateIndex < NavigationKeys.Length) {
                     string key = NavigationKeys[navigateIndex];
                     navigateIndex++;
                     AddNavigateToPoint(textViewLines, point, key);
