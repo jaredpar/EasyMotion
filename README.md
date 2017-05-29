@@ -22,4 +22,8 @@ The editor will replace all occurrences of 'C' with a new letter (A-Z).  At this
 
 The caret is now at the start of 'Console.WriteLine' as we wanted at the start
 
+You can search for segments longer than one char by pressing space. Each space increments segment length by one.
+If you query contains uppercase characters, search won't ignore case.
+Compatible with [VsVim](https://github.com/jaredpar/VsVim)
+
 

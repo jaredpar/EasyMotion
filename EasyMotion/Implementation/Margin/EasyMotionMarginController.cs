@@ -36,7 +36,7 @@ namespace EasyMotion.Implementation.Margin
                     break;
                 case EasyMotionState.LookingForChar:
                     _control.Visibility = Visibility.Visible;
-                    _control.StatusLine = "Type the character you want to search for";
+                    _control.StatusLine = "Type the character you want to search for or press <Space> to look for string (length=2)";
                     break;
                 case EasyMotionState.LookingForDecision:
                     _control.Visibility = Visibility.Visible;
@@ -44,7 +44,7 @@ namespace EasyMotion.Implementation.Margin
                     break;
                 case EasyMotionState.LookingCharNotFound:
                     _control.Visibility = Visibility.Visible;
-                    _control.StatusLine = string.Format("Character '{0}' not found. Type the character you want to search for", _easyMotionUtil.TargetChar);
+                    _control.StatusLine = string.Format("String '{0}' not found. Type the character you want to search for", _easyMotionUtil.Target);
                     break;
                 default:
                     Debug.Assert(false);
