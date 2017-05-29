@@ -16,7 +16,7 @@ The editor adds a status line to let you know it's ready to search.  Type 'C' as
 
 ![Example Step 3](/images/example3.png)
 
-The editor will replace all occurences of 'C' with a new letter (A-Z).  At this point if you type any of the letters the caret will be moved to that location.  In this case you type 'I' to move to the correct occurence of 'C'
+The editor will replace all occurrences of 'C' with a new letter (A-Z).  At this point if you type any of the letters the caret will be moved to that location.  In this case you type 'I' to move to the correct occurrence of 'C'
 
 ![Example Step 4](/images/example4.png)
 
