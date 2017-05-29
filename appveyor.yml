@@ -1,9 +1,10 @@
 
 configuration: Debug
+image: Visual Studio 2017
 
 before_build:
   - nuget restore
-
+  
 build:
   project: EasyMotion.sln
   verbosity: minimal
