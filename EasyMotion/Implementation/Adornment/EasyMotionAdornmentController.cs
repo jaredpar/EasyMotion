@@ -113,6 +113,7 @@ namespace EasyMotion.Implementation.Adornment
                     navigateIndex++;
                     AddNavigateToPoint(textViewLines, point, key);
                 }
+                if (navigateIndex < NavigationKeys.Length == false) break;//don't search further, as I won't use them anyway
             }
 
             if (navigateIndex == 0)
