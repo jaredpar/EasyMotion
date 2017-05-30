@@ -1,1 +1,8 @@
-﻿30-Mar-2017 v1.0.2 - Upgraded to support VS2017
+﻿2017-??-?? v1.1.0  
+	Hack to work with VsVim (Send ESC keystroke after navigation)
+	User can search for arbitrary length strings by pressing space (single press => look for two letter segment)
+	Use smartcase when searching for segment (if query contains uppercase letter, do not ignore case)
+
+30-Mar-2017 v1.0.2
+	Upgraded to support VS2017
+

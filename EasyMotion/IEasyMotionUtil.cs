@@ -38,10 +38,10 @@ namespace EasyMotion
         EasyMotionState State { get; }
 
         /// <summary>
-        /// During the LookingForDecision state this will be the character which 
+        /// During the LookingForDecision state this will be the character/string which 
         /// the user has decided to make an easy motion for 
         /// </summary>
-        char TargetChar { get; }
+        string Target { get; }
 
         event EventHandler StateChanged;
 
@@ -49,7 +49,7 @@ namespace EasyMotion
 
         void ChangeToLookingForChar();
 
-        void ChangeToLookingForDecision(char target);
+        void ChangeToLookingForDecision(string target);
 
         void ChangeToLookingCharNotFound();
     }

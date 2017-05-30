@@ -11,14 +11,14 @@ namespace EasyMotion.Implementation.EasyMotionUtil
     {
         private readonly ITextView _textView;
         private EasyMotionState _state;
-        private char _targetChar;
+        private string _targetChar;
 
         public EasyMotionState State
         {
             get { return _state; }
         }
 
-        public char TargetChar
+        public string Target
         {
             get { return _targetChar; }
         }
@@ -39,18 +39,18 @@ namespace EasyMotion.Implementation.EasyMotionUtil
         public void ChangeToDisabled()
         {
             _state = EasyMotionState.Disabled;
-            _targetChar = (char)0;
+            _targetChar = String.Empty;
             RaiseStateChanged();
         }
 
         public void ChangeToLookingForChar()
         {
             _state = EasyMotionState.LookingForChar;
-            _targetChar = (char)0;
+            _targetChar = String.Empty;
             RaiseStateChanged();
         }
 
-        public void ChangeToLookingForDecision(char target)
+        public void ChangeToLookingForDecision(string target)
         {
             _state = EasyMotionState.LookingForDecision;
             _targetChar = target;
@@ -65,11 +65,7 @@ namespace EasyMotion.Implementation.EasyMotionUtil
 
         private void RaiseStateChanged()
         {
-            var list = StateChanged;
-            if (list != null)
-            {
-                list(this, EventArgs.Empty);
-            }
+            StateChanged?.Invoke (this, EventArgs.Empty);
         }
     }
 }
