@@ -24,7 +24,7 @@ namespace EasyMotion.Implementation.KeyProcessing {
         public override void TextInput (TextCompositionEventArgs args) {
             base.TextInput (args);
 
-            switch (_easyMotionUtil.State) { 
+            switch (_easyMotionUtil.State) {
                 case EasyMotionState.Disabled:
                     // Nothing to do here 
                     break;
@@ -57,13 +57,19 @@ namespace EasyMotion.Implementation.KeyProcessing {
             if (args.Key == Key.Space && _easyMotionUtil.State == EasyMotionState.LookingForChar) {
                 _CharsToLookFor++;
             }
+            //handles user backspacing his search query; this is required because query can be longer than one char
+            if (args.Key == Key.Back && _easyMotionUtil.State == EasyMotionState.LookingForChar || _easyMotionUtil.State ==  EasyMotionState.LookingCharNotFound) {
+                if (_UserInput.Length > 0) _UserInput = _UserInput.Substring (0, _UserInput.Length - 1);
+            }
         }
 
         private void TextInputLookingForChar (TextCompositionEventArgs args) {
-            _UserInput += args.Text.Substring (args.Text.Length - 1, 1);
-            if (_UserInput.Length == _CharsToLookFor) {
-                _easyMotionUtil.ChangeToLookingForDecision (_UserInput);
-                ClearSearch ();
+            if (args.Text.Length > 0) {
+                _UserInput += args.Text.Substring (args.Text.Length - 1, 1);
+                if (_UserInput.Length == _CharsToLookFor) {
+                    _easyMotionUtil.ChangeToLookingForDecision (_UserInput);
+                    ClearSearch ();
+                }
             }
             args.Handled = true;
         }
