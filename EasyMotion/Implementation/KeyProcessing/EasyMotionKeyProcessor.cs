@@ -14,6 +14,7 @@ namespace EasyMotion.Implementation.KeyProcessing
     {
         private readonly IEasyMotionUtil _easyMotionUtil;
         private readonly IEasyMotionNavigator _easyMotionNavigator;
+        private System.Text.StringBuilder _easyMotionLettersAccumulator = new System.Text.StringBuilder();
 
         internal EasyMotionKeyProcessor(IEasyMotionUtil easyMotionUtil, IEasyMotionNavigator easyMotionNavigator)
         {
@@ -49,6 +50,7 @@ namespace EasyMotion.Implementation.KeyProcessing
 
             if (args.Key == Key.Escape && _easyMotionUtil.State != EasyMotionState.Disabled)
             {
+                //_userInput = string.Empty;
                 _easyMotionUtil.ChangeToDisabled();
             }
         }
@@ -58,6 +60,7 @@ namespace EasyMotion.Implementation.KeyProcessing
             if (args.Text.Length == 1)
             {
                 _easyMotionUtil.ChangeToLookingForDecision(args.Text[0]);
+                _easyMotionLettersAccumulator.Clear();
                 args.Handled = true;
             }
         }
@@ -66,7 +69,8 @@ namespace EasyMotion.Implementation.KeyProcessing
         {
             if (args.Text.Length > 0)
             {
-                if (_easyMotionNavigator.NavigateTo(args.Text))
+                _easyMotionLettersAccumulator.Append(args.Text);
+                if (_easyMotionNavigator.NavigateTo(_easyMotionLettersAccumulator.ToString()))
                 {
                     _easyMotionUtil.ChangeToDisabled();
                 }

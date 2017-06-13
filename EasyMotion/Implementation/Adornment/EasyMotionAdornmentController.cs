@@ -15,8 +15,26 @@ namespace EasyMotion.Implementation.Adornment
 {
     internal sealed class EasyMotionAdornmentController : IEasyMotionNavigator
     {
-        private static readonly string[] NavigationKeys =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        private static string[] GenerateNavigationMultiKeys()
+        {
+            const string alphabet = "abcdefghijklmnopqrstuvwxyz";
+            string[] s = new string[alphabet.Length * alphabet.Length];
+            int k = 0;
+            for (int i = 0; i < alphabet.Length; i++)
+            {
+                for (int j = 0; j < alphabet.Length; j++)
+                {
+                    char[] letters = { alphabet[i], alphabet[j] };
+                    s[k] = new string(letters);
+                    k++;
+                }
+            }
+            return s;
+        }
+
+        private static readonly string[] NavigationMultiKeys = GenerateNavigationMultiKeys();
+        private static readonly string[] NavigationSingleKeys =
+            "abcdefghijklmnopqrstuvwxyz"
             .Select(x => x.ToString())
             .ToArray();
 
@@ -102,6 +120,19 @@ namespace EasyMotion.Implementation.Adornment
             var endPoint = textViewLines.LastVisibleLine.End;
             var snapshot = startPoint.Snapshot;
             int navigateIndex = 0;
+
+            for (int i = startPoint.Position; i < endPoint.Position; i++)
+            {
+                var point = new SnapshotPoint(snapshot, i);
+                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar))
+                {
+                    navigateIndex++;
+                }
+            }
+
+            string[] NavigationKeys = navigateIndex < NavigationSingleKeys.Length ? NavigationSingleKeys : NavigationMultiKeys;
+            navigateIndex = 0;
+
             for (int i = startPoint.Position; i < endPoint.Position; i++)
             {
                 var point = new SnapshotPoint(snapshot, i);
