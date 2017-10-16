@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Windows;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace EasyMotion.Implementation.Adornment
 {
@@ -24,16 +25,19 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IWpfTextView _wpfTextView;
         private readonly IEditorFormatMap _editorFormatMap;
         private readonly IClassificationFormatMap _classificationFormatMap;
+        private readonly ITextSearchService _TextSerachService;
         private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
-        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap)
+        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap
+            , ITextSearchService _textSerachService)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
             _editorFormatMap = editorFormatMap;
             _classificationFormatMap = classificationFormatMap;
+            _TextSerachService = _textSerachService;
         }
 
         internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
@@ -102,18 +106,28 @@ namespace EasyMotion.Implementation.Adornment
             var endPoint = textViewLines.LastVisibleLine.End;
             var snapshot = startPoint.Snapshot;
             int navigateIndex = 0;
-            for (int i = startPoint.Position; i < endPoint.Position; i++)
+
+            var toSearch = _easyMotionUtil.TargetChar.ToString();
+            var data = new FindData()
             {
-                var point = new SnapshotPoint(snapshot, i);
+                SearchString = _easyMotionUtil.SearchMode ==  EasyMotionSearchMode.Char ? toSearch :  @"\b" + toSearch,
+                TextSnapshotToSearch = snapshot,
+                FindOptions = FindOptions.UseRegularExpressions 
+            };
 
-                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < NavigationKeys.Length)
+            var startindex = startPoint.Position;
+            while (navigateIndex < NavigationKeys.Length)
+            {
+               var res = _TextSerachService.FindNext(startindex, false, data);
+                if (!res.HasValue)
                 {
-                    string key = NavigationKeys[navigateIndex];
-                    navigateIndex++;
-                    AddNavigateToPoint(textViewLines, point, key);
+                    break;
                 }
+                var key = NavigationKeys[navigateIndex];
+                AddNavigateToPoint(textViewLines, res.Value.Start, key);
+                startindex = res.Value.Start.Position + 1;
+                navigateIndex++;
             }
-
             if (navigateIndex == 0)
             {
                 _easyMotionUtil.ChangeToLookingCharNotFound();

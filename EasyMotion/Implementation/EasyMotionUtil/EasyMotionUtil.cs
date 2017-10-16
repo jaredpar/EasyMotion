@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,17 @@ namespace EasyMotion.Implementation.EasyMotionUtil
     {
         private readonly ITextView _textView;
         private EasyMotionState _state;
+        private EasyMotionSearchMode _searchMode;
         private char _targetChar;
 
         public EasyMotionState State
         {
             get { return _state; }
+        }
+
+        public EasyMotionSearchMode SearchMode
+        {
+            get { return _searchMode; }
         }
 
         public char TargetChar
@@ -43,9 +50,10 @@ namespace EasyMotion.Implementation.EasyMotionUtil
             RaiseStateChanged();
         }
 
-        public void ChangeToLookingForChar()
+        public void ChangeToLookingForChar(EasyMotionSearchMode mode)
         {
             _state = EasyMotionState.LookingForChar;
+            _searchMode = mode;
             _targetChar = (char)0;
             RaiseStateChanged();
         }

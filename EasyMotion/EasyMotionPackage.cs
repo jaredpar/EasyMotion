@@ -81,7 +81,7 @@ namespace EasyMotion
             }
             else
             {
-                easyMotionUtil.ChangeToLookingForChar();
+                easyMotionUtil.ChangeToLookingForChar(EasyMotionSearchMode.Char);
             }
         }
 
