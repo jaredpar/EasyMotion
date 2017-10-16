@@ -14,11 +14,18 @@
     <Buttons>
       <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100" type="Button">
         <Parent guid="guidEasyMotionCmdSet" id="MyMenuGroup" />
-        <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
           <ButtonText>EasyMotionNavigate</ButtonText>
           <CanonicalName>.EasyMotion.Navigate</CanonicalName>
           <LocCanonicalName>.EasyMotion.Navigate</LocCanonicalName>
+        </Strings>
+      </Button>
+      <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigateWord" priority="0x0100" type="Button">
+        <Parent guid="guidEasyMotionCmdSet" id="MyMenuGroup" />
+        <Strings>
+          <ButtonText>EasyMotionNavigateWord</ButtonText>
+          <CanonicalName>.EasyMotion.NavigateWord</CanonicalName>
+          <LocCanonicalName>.EasyMotion.NavigateWord</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
@@ -40,6 +47,7 @@
     <GuidSymbol name="guidEasyMotionCmdSet" value="{907a344a-75bb-4df4-a3b3-9bc3299593b7}">
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="CmdEasyMotionNavigate" value="0x0100" />
+      <IDSymbol name="CmdEasyMotionNavigateWord" value="0x0101" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{a0c05e65-710e-45db-a639-008c57538b55}" >

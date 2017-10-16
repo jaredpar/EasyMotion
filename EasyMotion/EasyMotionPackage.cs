@@ -60,6 +60,10 @@ namespace EasyMotion
                 CommandID menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)PkgCmdIDList.CmdEasyMotionNavigate);
                 MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
                 mcs.AddCommand( menuItem );
+                // Navigate to word
+                menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)PkgCmdIDList.CmdEasyMotionNavigateWord);
+                menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                mcs.AddCommand(menuItem);
             }
         }
 
@@ -81,7 +85,10 @@ namespace EasyMotion
             }
             else
             {
-                easyMotionUtil.ChangeToLookingForChar(EasyMotionSearchMode.Char);
+                var command = sender as MenuCommand;
+                Debug.Assert(command != null);
+                var mode = command.CommandID.ID == PkgCmdIDList.CmdEasyMotionNavigateWord ? EasyMotionSearchMode.Word : EasyMotionSearchMode.Char;
+                easyMotionUtil.ChangeToLookingForChar(mode);
             }
         }
 

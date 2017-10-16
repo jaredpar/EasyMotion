@@ -7,7 +7,7 @@ namespace EasyMotion
     static class PkgCmdIDList
     {
         public const uint CmdEasyMotionNavigate =        0x100;
-
+        public const uint CmdEasyMotionNavigateWord =    0x101;
 
     };
 }
