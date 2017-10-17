@@ -112,7 +112,8 @@ namespace EasyMotion.Implementation.Adornment
             var toSearch = _easyMotionUtil.TargetChar.ToString();
             var data = new FindData()
             {
-                SearchString = _easyMotionUtil.SearchMode ==  EasyMotionSearchMode.Char ? toSearch :  @"\b" + toSearch,
+                SearchString = _easyMotionUtil.SearchMode ==  EasyMotionSearchMode.Char || _easyMotionUtil.SearchMode == EasyMotionSearchMode.CharExtend
+                ? toSearch :  @"\b" + toSearch,
                 TextSnapshotToSearch = snapshot,
                 FindOptions = FindOptions.UseRegularExpressions 
             };
