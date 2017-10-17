@@ -27,6 +27,7 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IEditorFormatMapService _editorFormatMapService;
         private readonly IClassificationFormatMapService _classificationFormatMapService;
         private readonly ITextSearchService _textSerachService;
+        private readonly IEditorOperationsFactoryService _editorOperationsFactory;
 
 #pragma warning disable 169
         [Export(typeof(AdornmentLayerDefinition))]
@@ -37,12 +38,13 @@ namespace EasyMotion.Implementation.Adornment
 
         [ImportingConstructor]
         internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IEditorFormatMapService editorFormatMapService
-            , IClassificationFormatMapService classificationFormatMapService, ITextSearchService textSearchService)
+            , IClassificationFormatMapService classificationFormatMapService, ITextSearchService textSearchService, IEditorOperationsFactoryService editorOperations)
         {
             _easyMotionUtilProvider = easyMotionUtilProvider;
             _editorFormatMapService = editorFormatMapService;
             _classificationFormatMapService = classificationFormatMapService;
             _textSerachService = textSearchService;
+            _editorOperationsFactory = editorOperations;
         }
 
         private EasyMotionAdornmentController GetOrCreate(IWpfTextView wpfTextView)
@@ -54,7 +56,7 @@ namespace EasyMotion.Implementation.Adornment
                     var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
                     var editorFormatMap = _editorFormatMapService.GetEditorFormatMap(wpfTextView);
                     var classificationFormatMap = _classificationFormatMapService.GetClassificationFormatMap(wpfTextView);
-                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, editorFormatMap, classificationFormatMap, _textSerachService);
+                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, editorFormatMap, classificationFormatMap, _textSerachService, _editorOperationsFactory.GetEditorOperations(wpfTextView));
                 });
         }
 

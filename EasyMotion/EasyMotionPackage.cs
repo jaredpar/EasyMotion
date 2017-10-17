@@ -53,18 +53,21 @@ namespace EasyMotion
             _exportProvider = _componentModel.DefaultExportProvider;
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if ( null != mcs )
             {
-                // Create the command for the menu item.
-                CommandID menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)PkgCmdIDList.CmdEasyMotionNavigate);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
-                mcs.AddCommand( menuItem );
-                // Navigate to word
-                menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)PkgCmdIDList.CmdEasyMotionNavigateWord);
-                menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
-                mcs.AddCommand(menuItem);
+                AddCommand(PkgCmdIDList.CmdEasyMotionNavigate, mcs);
+                AddCommand(PkgCmdIDList.CmdEasyMotionNavigateWord, mcs);
+                AddCommand(PkgCmdIDList.CmdEasyMotionNavigateExtend, mcs);
+                AddCommand(PkgCmdIDList.CmdEasyMotionNavigateWordExtend, mcs);
             }
+        }
+
+        private void AddCommand(uint cmd, OleMenuCommandService mcs)
+        {
+            var menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)cmd);
+            var menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+            mcs.AddCommand(menuItem);
         }
 
         private void MenuItemCallback(object sender, EventArgs e)
@@ -87,7 +90,22 @@ namespace EasyMotion
             {
                 var command = sender as MenuCommand;
                 Debug.Assert(command != null);
-                var mode = command.CommandID.ID == PkgCmdIDList.CmdEasyMotionNavigateWord ? EasyMotionSearchMode.Word : EasyMotionSearchMode.Char;
+                var mode = EasyMotionSearchMode.Char; 
+                switch (command.CommandID.ID)
+                {
+                    case (int)PkgCmdIDList.CmdEasyMotionNavigate:
+                        mode = EasyMotionSearchMode.Char;
+                        break;
+                    case (int)PkgCmdIDList.CmdEasyMotionNavigateWord:
+                        mode = EasyMotionSearchMode.Word;
+                        break;
+                    case (int)PkgCmdIDList.CmdEasyMotionNavigateExtend:
+                        mode = EasyMotionSearchMode.CharExtend;
+                        break;
+                    case (int)PkgCmdIDList.CmdEasyMotionNavigateWordExtend:
+                        mode = EasyMotionSearchMode.WordExtend;
+                        break;
+                }
                 easyMotionUtil.ChangeToLookingForChar(mode);
             }
         }

@@ -28,7 +28,26 @@
           <LocCanonicalName>.EasyMotion.NavigateWord</LocCanonicalName>
         </Strings>
       </Button>
+
+      <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigateExtend" priority="0x0100" type="Button">
+        <Parent guid="guidEasyMotionCmdSet" id="MyMenuGroup" />
+        <Strings>
+          <ButtonText>EasyMotionNavigateExtend</ButtonText>
+          <CanonicalName>.EasyMotion.NavigateExtend</CanonicalName>
+          <LocCanonicalName>.EasyMotion.NavigateExtend</LocCanonicalName>
+        </Strings>
+      </Button>
+      <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigateWordExtend" priority="0x0100" type="Button">
+        <Parent guid="guidEasyMotionCmdSet" id="MyMenuGroup" />
+        <Strings>
+          <ButtonText>EasyMotionNavigateWordExtend</ButtonText>
+          <CanonicalName>.EasyMotion.NavigateWordExtend</CanonicalName>
+          <LocCanonicalName>.EasyMotion.NavigateWordExtend</LocCanonicalName>
+        </Strings>
+      </Button>
+      
     </Buttons>
+    
 
     <Bitmaps>
       <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
@@ -48,6 +67,8 @@
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="CmdEasyMotionNavigate" value="0x0100" />
       <IDSymbol name="CmdEasyMotionNavigateWord" value="0x0101" />
+      <IDSymbol name="CmdEasyMotionNavigateExtend" value="0x0102" />
+      <IDSymbol name="CmdEasyMotionNavigateWordExtend" value="0x0103" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{a0c05e65-710e-45db-a639-008c57538b55}" >

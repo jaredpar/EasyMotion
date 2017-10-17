@@ -26,18 +26,20 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IEditorFormatMap _editorFormatMap;
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly ITextSearchService _TextSerachService;
+        private readonly IEditorOperations _editorOperations;
         private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
         internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap
-            , ITextSearchService _textSerachService)
+            , ITextSearchService textSerachService, IEditorOperations editorOperations)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
             _editorFormatMap = editorFormatMap;
             _classificationFormatMap = classificationFormatMap;
-            _TextSerachService = _textSerachService;
+            _TextSerachService = textSerachService;
+          _editorOperations = editorOperations;
         }
 
         internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
@@ -119,7 +121,7 @@ namespace EasyMotion.Implementation.Adornment
             while (navigateIndex < NavigationKeys.Length)
             {
                var res = _TextSerachService.FindNext(startindex, false, data);
-                if (!res.HasValue)
+                if (!res.HasValue || res.Value.Start.Position > endPoint.Position)
                 {
                     break;
                 }
@@ -170,7 +172,14 @@ namespace EasyMotion.Implementation.Adornment
                 return false;
             }
 
-            _wpfTextView.Caret.MoveTo(point);
+            if (_easyMotionUtil.SearchMode == EasyMotionSearchMode.CharExtend || _easyMotionUtil.SearchMode == EasyMotionSearchMode.WordExtend)
+            {
+                _editorOperations.ExtendSelection(point.Position);
+            }
+            else
+            {
+                _wpfTextView.Caret.MoveTo(point);
+            }
             return true;
         }
     }

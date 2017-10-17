@@ -17,7 +17,17 @@ namespace EasyMotion
         /// <summary>
         /// Developer is looking for words starting with the typed character
         /// </summary>
-        Word
+        Word,
+
+        /// <summary>
+        /// Same as Char + extending the selection
+        /// </summary>
+       CharExtend,
+
+       /// <summary>
+       /// Same as Word + extending the selection
+       /// </summary>
+       WordExtend
     }
 
 
