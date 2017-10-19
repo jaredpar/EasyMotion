@@ -34,6 +34,8 @@ namespace EasyMotion.Implementation.EasyMotionUtil
             get { return _textView; }
         }
 
+        public bool IsInWordMode => SearchMode == EasyMotionSearchMode.Word || SearchMode == EasyMotionSearchMode.WordExtend;
+
         public event EventHandler StateChanged;
 
         internal EasyMotionUtil(ITextView textView)

@@ -109,13 +109,17 @@ namespace EasyMotion.Implementation.Adornment
             var snapshot = startPoint.Snapshot;
             int navigateIndex = 0;
 
+            if (_easyMotionUtil.IsInWordMode && !char.IsLetterOrDigit(_easyMotionUtil.TargetChar))
+            {
+                _easyMotionUtil.ChangeToLookingCharNotFound();
+                return;
+            }
             var toSearch = _easyMotionUtil.TargetChar.ToString();
             var data = new FindData()
             {
-                SearchString = _easyMotionUtil.SearchMode ==  EasyMotionSearchMode.Char || _easyMotionUtil.SearchMode == EasyMotionSearchMode.CharExtend
-                ? toSearch :  @"\b" + toSearch,
+                SearchString = _easyMotionUtil.IsInWordMode ? @"\b" + toSearch : toSearch,
                 TextSnapshotToSearch = snapshot,
-                FindOptions = FindOptions.UseRegularExpressions 
+                FindOptions = _easyMotionUtil.IsInWordMode ? FindOptions.UseRegularExpressions : FindOptions.None
             };
 
             var startindex = startPoint.Position;

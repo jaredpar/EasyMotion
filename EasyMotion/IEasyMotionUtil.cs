@@ -79,6 +79,8 @@ namespace EasyMotion
         void ChangeToLookingForDecision(char target);
 
         void ChangeToLookingCharNotFound();
+
+        bool IsInWordMode { get; }
     }
 
     internal interface IEasyMotionUtilProvider
