@@ -7,6 +7,31 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EasyMotion
 {
+    internal enum EasyMotionSearchMode
+    {
+        /// <summary>
+        /// Developer is looking for characters anywhere
+        /// </summary>
+        Char,
+
+        /// <summary>
+        /// Developer is looking for words starting with the typed character
+        /// </summary>
+        Word,
+
+        /// <summary>
+        /// Same as Char + extending the selection
+        /// </summary>
+       CharExtend,
+
+       /// <summary>
+       /// Same as Word + extending the selection
+       /// </summary>
+       WordExtend
+    }
+
+
+
     internal enum EasyMotionState
     {
         /// <summary>
@@ -37,6 +62,8 @@ namespace EasyMotion
 
         EasyMotionState State { get; }
 
+        EasyMotionSearchMode SearchMode { get; }
+
         /// <summary>
         /// During the LookingForDecision state this will be the character which 
         /// the user has decided to make an easy motion for 
@@ -47,11 +74,13 @@ namespace EasyMotion
 
         void ChangeToDisabled();
 
-        void ChangeToLookingForChar();
+        void ChangeToLookingForChar(EasyMotionSearchMode searchMode);
 
         void ChangeToLookingForDecision(char target);
 
         void ChangeToLookingCharNotFound();
+
+        bool IsInWordMode { get; }
     }
 
     internal interface IEasyMotionUtilProvider

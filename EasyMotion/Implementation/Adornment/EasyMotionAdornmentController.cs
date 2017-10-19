@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Windows;
+using Microsoft.VisualStudio.Text.Operations;
 
 namespace EasyMotion.Implementation.Adornment
 {
@@ -24,16 +25,21 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IWpfTextView _wpfTextView;
         private readonly IEditorFormatMap _editorFormatMap;
         private readonly IClassificationFormatMap _classificationFormatMap;
+        private readonly ITextSearchService _TextSerachService;
+        private readonly IEditorOperations _editorOperations;
         private readonly Dictionary<string, SnapshotPoint> _navigateMap = new Dictionary<string, SnapshotPoint>();
         private readonly object _tag = new object();
         private IAdornmentLayer _adornmentLayer;
 
-        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap)
+        internal EasyMotionAdornmentController(IEasyMotionUtil easyMotionUtil, IWpfTextView wpfTextview, IEditorFormatMap editorFormatMap, IClassificationFormatMap classificationFormatMap
+            , ITextSearchService textSerachService, IEditorOperations editorOperations)
         {
             _easyMotionUtil = easyMotionUtil;
             _wpfTextView = wpfTextview;
             _editorFormatMap = editorFormatMap;
             _classificationFormatMap = classificationFormatMap;
+            _TextSerachService = textSerachService;
+          _editorOperations = editorOperations;
         }
 
         internal void SetAdornmentLayer(IAdornmentLayer adornmentLayer)
@@ -102,18 +108,33 @@ namespace EasyMotion.Implementation.Adornment
             var endPoint = textViewLines.LastVisibleLine.End;
             var snapshot = startPoint.Snapshot;
             int navigateIndex = 0;
-            for (int i = startPoint.Position; i < endPoint.Position; i++)
+
+            if (_easyMotionUtil.IsInWordMode && !char.IsLetterOrDigit(_easyMotionUtil.TargetChar))
             {
-                var point = new SnapshotPoint(snapshot, i);
-
-                if (Char.ToLower(point.GetChar()) == Char.ToLower(_easyMotionUtil.TargetChar) && navigateIndex < NavigationKeys.Length)
-                {
-                    string key = NavigationKeys[navigateIndex];
-                    navigateIndex++;
-                    AddNavigateToPoint(textViewLines, point, key);
-                }
+                _easyMotionUtil.ChangeToLookingCharNotFound();
+                return;
             }
+            var toSearch = _easyMotionUtil.TargetChar.ToString();
+            var data = new FindData()
+            {
+                SearchString = _easyMotionUtil.IsInWordMode ? @"\b" + toSearch : toSearch,
+                TextSnapshotToSearch = snapshot,
+                FindOptions = _easyMotionUtil.IsInWordMode ? FindOptions.UseRegularExpressions : FindOptions.None
+            };
 
+            var startindex = startPoint.Position;
+            while (navigateIndex < NavigationKeys.Length)
+            {
+               var res = _TextSerachService.FindNext(startindex, false, data);
+                if (!res.HasValue || res.Value.Start.Position > endPoint.Position)
+                {
+                    break;
+                }
+                var key = NavigationKeys[navigateIndex];
+                AddNavigateToPoint(textViewLines, res.Value.Start, key);
+                startindex = res.Value.Start.Position + 1;
+                navigateIndex++;
+            }
             if (navigateIndex == 0)
             {
                 _easyMotionUtil.ChangeToLookingCharNotFound();
@@ -156,7 +177,14 @@ namespace EasyMotion.Implementation.Adornment
                 return false;
             }
 
-            _wpfTextView.Caret.MoveTo(point);
+            if (_easyMotionUtil.SearchMode == EasyMotionSearchMode.CharExtend || _easyMotionUtil.SearchMode == EasyMotionSearchMode.WordExtend)
+            {
+                _editorOperations.ExtendSelection(point.Position);
+            }
+            else
+            {
+                _wpfTextView.Caret.MoveTo(point);
+            }
             return true;
         }
     }

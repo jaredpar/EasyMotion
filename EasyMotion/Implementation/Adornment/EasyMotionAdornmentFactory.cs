@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Text.Operations;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace EasyMotion.Implementation.Adornment
         private readonly IEasyMotionUtilProvider _easyMotionUtilProvider;
         private readonly IEditorFormatMapService _editorFormatMapService;
         private readonly IClassificationFormatMapService _classificationFormatMapService;
+        private readonly ITextSearchService _textSerachService;
+        private readonly IEditorOperationsFactoryService _editorOperationsFactory;
 
 #pragma warning disable 169
         [Export(typeof(AdornmentLayerDefinition))]
@@ -34,11 +37,14 @@ namespace EasyMotion.Implementation.Adornment
 #pragma warning restore 169
 
         [ImportingConstructor]
-        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IEditorFormatMapService editorFormatMapService, IClassificationFormatMapService classificationFormatMapService)
+        internal EasyMotionAdornmentFactory(IEasyMotionUtilProvider easyMotionUtilProvider, IEditorFormatMapService editorFormatMapService
+            , IClassificationFormatMapService classificationFormatMapService, ITextSearchService textSearchService, IEditorOperationsFactoryService editorOperations)
         {
             _easyMotionUtilProvider = easyMotionUtilProvider;
             _editorFormatMapService = editorFormatMapService;
             _classificationFormatMapService = classificationFormatMapService;
+            _textSerachService = textSearchService;
+            _editorOperationsFactory = editorOperations;
         }
 
         private EasyMotionAdornmentController GetOrCreate(IWpfTextView wpfTextView)
@@ -50,7 +56,7 @@ namespace EasyMotion.Implementation.Adornment
                     var easyMotionUtil = _easyMotionUtilProvider.GetEasyMotionUtil(wpfTextView);
                     var editorFormatMap = _editorFormatMapService.GetEditorFormatMap(wpfTextView);
                     var classificationFormatMap = _classificationFormatMapService.GetClassificationFormatMap(wpfTextView);
-                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, editorFormatMap, classificationFormatMap);
+                    return new EasyMotionAdornmentController(easyMotionUtil, wpfTextView, editorFormatMap, classificationFormatMap, _textSerachService, _editorOperationsFactory.GetEditorOperations(wpfTextView));
                 });
         }
 

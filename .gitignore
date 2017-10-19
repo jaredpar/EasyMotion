@@ -173,3 +173,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+*.ide
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json

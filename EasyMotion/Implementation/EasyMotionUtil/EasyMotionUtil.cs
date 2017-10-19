@@ -11,11 +11,17 @@ namespace EasyMotion.Implementation.EasyMotionUtil
     {
         private readonly ITextView _textView;
         private EasyMotionState _state;
+        private EasyMotionSearchMode _searchMode;
         private char _targetChar;
 
         public EasyMotionState State
         {
             get { return _state; }
+        }
+
+        public EasyMotionSearchMode SearchMode
+        {
+            get { return _searchMode; }
         }
 
         public char TargetChar
@@ -27,6 +33,8 @@ namespace EasyMotion.Implementation.EasyMotionUtil
         {
             get { return _textView; }
         }
+
+        public bool IsInWordMode => SearchMode == EasyMotionSearchMode.Word || SearchMode == EasyMotionSearchMode.WordExtend;
 
         public event EventHandler StateChanged;
 
@@ -43,9 +51,10 @@ namespace EasyMotion.Implementation.EasyMotionUtil
             RaiseStateChanged();
         }
 
-        public void ChangeToLookingForChar()
+        public void ChangeToLookingForChar(EasyMotionSearchMode mode)
         {
             _state = EasyMotionState.LookingForChar;
+            _searchMode = mode;
             _targetChar = (char)0;
             RaiseStateChanged();
         }
