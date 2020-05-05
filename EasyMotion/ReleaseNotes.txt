@@ -1,2 +1,2 @@
-﻿05-May-2019 v1.0.3 - Upgraded to install on VS2019
+﻿05-May-2020 v1.0.3 - Upgraded to install on VS2019
 30-Mar-2017 v1.0.2 - Upgraded to support VS2017
