@@ -6,50 +6,47 @@
 
   <Commands package="guidEasyMotionPkg">
     <Groups>
-      <Group guid="guidEasyMotionCmdSet" id="MyMenuGroup" priority="0x0600">
+      <!-- Add the command to the Tools menu (in its own menu group) -->
+      <Group guid="guidEasyMotionCmdSet" id="EasyMotionMenuGroup" priority="0x0100">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
     </Groups>
 
     <Buttons>
       <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100" type="Button">
-        <Parent guid="guidEasyMotionCmdSet" id="MyMenuGroup" />
-        <Icon guid="guidImages" id="bmpPic1" />
+        <Parent guid="guidEasyMotionCmdSet" id="EasyMotionMenuGroup" />
+        <!-- Only show the button when a TextEditor is in focus. (Requires VisibiltyContraint)-->
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <ButtonText>EasyMotionNavigate</ButtonText>
+          <!-- Set the keyboard accelerator with &amp; before the hotkey -->
+          <ButtonText>Eas&amp;yMotion Navigate</ButtonText>
           <CanonicalName>.EasyMotion.Navigate</CanonicalName>
           <LocCanonicalName>.EasyMotion.Navigate</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
 
-    <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows"/>
-    </Bitmaps>
-
   </Commands>
 
+  <VisibilityConstraints>
+    <!-- Enable the command only when a text editor is in focus. (Requires Button to have DynamicVisibility CommandFlag) -->
+    <VisibilityItem guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" context="GUID_TextEditorFactory"/>
+  </VisibilityConstraints>
+
   <KeyBindings>
-    <KeyBinding guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" key1="VK_OEM_1" mod1="Control Shift" editor="guidVSStd97" />
-    <KeyBinding guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" key1="l" mod1="Control Shift" editor="guidVSStd97" />
+    <!-- Assign shortcut Ctrl+Shift+; Note: VK_OEM_1 = Semicolon key (;/:) -->
+    <KeyBinding guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" key1="VK_OEM_1" mod1="Control Shift" editor="GUID_TextEditorFactory" />
   </KeyBindings>
 
   <Symbols>
     <GuidSymbol name="guidEasyMotionPkg" value="{5bb019ad-a18e-4c86-af3c-27217853df95}" />
 
     <GuidSymbol name="guidEasyMotionCmdSet" value="{907a344a-75bb-4df4-a3b3-9bc3299593b7}">
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="EasyMotionMenuGroup" value="0x1020" />
       <IDSymbol name="CmdEasyMotionNavigate" value="0x0100" />
     </GuidSymbol>
 
-    <GuidSymbol name="guidImages" value="{a0c05e65-710e-45db-a639-008c57538b55}" >
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
-      <IDSymbol name="bmpPicStrikethrough" value="6" />
-    </GuidSymbol>
   </Symbols>
 
 </CommandTable>
