@@ -17,6 +17,7 @@ bld/
 [Oo]bj/
 *.ide/
 .vs/
+app.config
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
