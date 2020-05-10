@@ -5,22 +5,27 @@
   <Extern href="vsshlids.h"/>
 
   <Commands package="guidEasyMotionPkg">
+
     <Groups>
-      <!-- Add the command to the Tools menu (in its own menu group) -->
-      <Group guid="guidEasyMotionCmdSet" id="EasyMotionMenuGroup" priority="0x0100">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
+      <!-- Add the command to the Edit->GoTo menu -->
+      <Group guid="guidEasyMotionCmdSet" id="EasyMotionGotoGroup" priority="0x0150">
+        <!--<Parent guid="guidSHLMainMenu" id="IDG_VS_GOTO"/>-->
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_EDIT_GOTO"/>
+      </Group>
+      <!-- Add the command to the main Edit menu -->
+      <Group guid="guidEasyMotionCmdSet" id="EasyMotionEditGroup" priority="0x0050">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EDIT"/>
       </Group>
     </Groups>
 
     <Buttons>
-      <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100" type="Button">
-        <Parent guid="guidEasyMotionCmdSet" id="EasyMotionMenuGroup" />
+      <Button guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" type="Button">
         <!-- Only show the button when a TextEditor is in focus. (Requires VisibiltyContraint)-->
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
           <!-- Set the keyboard accelerator with &amp; before the hotkey -->
-          <ButtonText>Eas&amp;yMotion Navigate</ButtonText>
+          <ButtonText>Go To &amp;Character...</ButtonText>
           <CanonicalName>.EasyMotion.Navigate</CanonicalName>
           <LocCanonicalName>.EasyMotion.Navigate</LocCanonicalName>
         </Strings>
@@ -28,6 +33,15 @@
     </Buttons>
 
   </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100">
+      <Parent guid="guidEasyMotionCmdSet" id="EasyMotionGotoGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100">
+      <Parent guid="guidEasyMotionCmdSet" id="EasyMotionEditGroup" />
+    </CommandPlacement>
+  </CommandPlacements>
 
   <VisibilityConstraints>
     <!-- Enable the command only when a text editor is in focus. (Requires Button to have DynamicVisibility CommandFlag) -->
@@ -43,7 +57,8 @@
     <GuidSymbol name="guidEasyMotionPkg" value="{5bb019ad-a18e-4c86-af3c-27217853df95}" />
 
     <GuidSymbol name="guidEasyMotionCmdSet" value="{907a344a-75bb-4df4-a3b3-9bc3299593b7}">
-      <IDSymbol name="EasyMotionMenuGroup" value="0x1020" />
+      <IDSymbol name="EasyMotionGotoGroup" value="0x1020" />
+      <IDSymbol name="EasyMotionEditGroup" value="0x1030" />
       <IDSymbol name="CmdEasyMotionNavigate" value="0x0100" />
     </GuidSymbol>
 
