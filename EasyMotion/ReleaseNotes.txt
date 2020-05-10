@@ -1,2 +1,3 @@
-﻿05-May-2020 v1.0.3 - Upgraded to install on VS2019
+﻿10-May-2020 v1.1.0 - Separate extension created for VS2015 only
+05-May-2020 v1.0.3 - Upgraded to install on VS2019
 30-Mar-2017 v1.0.2 - Upgraded to support VS2017

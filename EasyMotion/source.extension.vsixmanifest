@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="5bb019ad-a18e-4c86-af3c-27217853df95" Version="1.0.3" Language="en-US" Publisher="JaredPar" />
+    <Identity Id="EasyMotion.fd58af35-bef0-4145-934b-7b565220cdbb" Version="1.1.0" Language="en-US" Publisher="JaredPar" />
     <DisplayName>EasyMotion</DisplayName>
     <Description>Easy Motion clone for Visual Studio</Description>
     <ReleaseNotes>ReleaseNotes.txt</ReleaseNotes>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Version="[14.0,)" Id="Microsoft.VisualStudio.Community" />
+    <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
