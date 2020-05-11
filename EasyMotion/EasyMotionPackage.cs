@@ -1,18 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
-using System.ComponentModel.Composition.Hosting;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Editor;
+using System;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace EasyMotion
 {
@@ -28,38 +25,48 @@ namespace EasyMotion
     /// </summary>
     // This attribute tells the PkgDef creation utility (CreatePkgDef.exe) that this class is
     // a package.
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     // This attribute is used to register the information needed to show this package
     // in the Help/About dialog of Visual Studio.
-    [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "2.1.0", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidEasyMotionPkgString)]
-    public sealed class EasyMotionPackage : Package
+    [ProvideAutoLoad(VSConstants.UICONTEXT.ShellInitialized_string, PackageAutoLoadFlags.BackgroundLoad)]
+    public sealed class EasyMotionPackage : AsyncPackage
     {
-        private IComponentModel _componentModel;
         private ExportProvider _exportProvider;
 
-        public EasyMotionPackage()
+        public EasyMotionPackage() { }
+
+        protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await base.InitializeAsync(cancellationToken, progress);
 
-        }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
-
-            _componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            _exportProvider = _componentModel.DefaultExportProvider;
+            await SetExportProvider();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
+            if (await GetServiceAsync(typeof(IMenuCommandService)) is OleMenuCommandService mcs)
             {
+                // Switch to main thread before calling AddCommand because it calls GetService
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
                 // Create the command for the menu item.
                 CommandID menuCommandID = new CommandID(GuidList.guidEasyMotionCmdSet, (int)PkgCmdIDList.CmdEasyMotionNavigate);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
-                mcs.AddCommand( menuItem );
+                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                mcs.AddCommand(menuItem);
+            }
+        }
+
+        private async Task SetExportProvider()
+        {
+            if (await GetServiceAsync(typeof(SComponentModel)) is IComponentModel componentModel)
+            {
+                _exportProvider = componentModel.DefaultExportProvider;
+            }
+            else
+            {
+                throw new Exception("Unable to fetch ComponentModel");
             }
         }
 
