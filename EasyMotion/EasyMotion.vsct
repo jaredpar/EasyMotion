@@ -7,14 +7,9 @@
   <Commands package="guidEasyMotionPkg">
 
     <Groups>
-      <!-- Add the command to the Edit->GoTo menu -->
+      <!-- Add the command to its own Group in the Edit->GoTo Menu -->
       <Group guid="guidEasyMotionCmdSet" id="EasyMotionGotoGroup" priority="0x0150">
-        <!--<Parent guid="guidSHLMainMenu" id="IDG_VS_GOTO"/>-->
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_EDIT_GOTO"/>
-      </Group>
-      <!-- Add the command to the main Edit menu -->
-      <Group guid="guidEasyMotionCmdSet" id="EasyMotionEditGroup" priority="0x0050">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_EDIT"/>
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_EDITOR_GOTO_MENU"/>
       </Group>
     </Groups>
 
@@ -24,7 +19,7 @@
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <Strings>
-          <!-- Set the keyboard accelerator with &amp; before the hotkey -->
+          <!-- Set the keyboard accelerator with &amp; before the hotkey (Go To Character) -->
           <ButtonText>Go To &amp;Character...</ButtonText>
           <CanonicalName>.EasyMotion.Navigate</CanonicalName>
           <LocCanonicalName>.EasyMotion.Navigate</LocCanonicalName>
@@ -37,9 +32,6 @@
   <CommandPlacements>
     <CommandPlacement guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100">
       <Parent guid="guidEasyMotionCmdSet" id="EasyMotionGotoGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEasyMotionCmdSet" id="CmdEasyMotionNavigate" priority="0x0100">
-      <Parent guid="guidEasyMotionCmdSet" id="EasyMotionEditGroup" />
     </CommandPlacement>
   </CommandPlacements>
 
